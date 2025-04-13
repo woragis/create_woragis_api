@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from data.database import SessionLocal
-from schemas.user import RegisterUser, UserOut, UpdateUser
-from controllers import user_controller
+from schemas.user import RegisterUser, User, UpdateUser
+from controllers import user as user_controller
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -15,17 +15,17 @@ def get_db():
         db.close()
 
 
-@router.post("/", response_model=UserOut)
+@router.post("/", response_model=User)
 def create_user(user: RegisterUser, db: Session = Depends(get_db)):
     return user_controller.create_user(db, user)
 
 
-@router.get("/", response_model=list[UserOut])
+@router.get("/", response_model=list[User])
 def list_users(db: Session = Depends(get_db)):
     return user_controller.get_users(db)
 
 
-@router.get("/{user_id}", response_model=UserOut)
+@router.get("/{user_id}", response_model=User)
 def get_user(user_id: str, db: Session = Depends(get_db)):
     user = user_controller.get_user_by_id(db, user_id)
     if not user:
@@ -33,7 +33,7 @@ def get_user(user_id: str, db: Session = Depends(get_db)):
     return user
 
 
-@router.put("/{user_id}", response_model=UserOut)
+@router.put("/{user_id}", response_model=User)
 def update_user(user_id: str, user: UpdateUser, db: Session = Depends(get_db)):
     updated = user_controller.update_user(db, user_id, user)
     if not updated:
