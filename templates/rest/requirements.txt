@@ -8,3 +8,4 @@ httpx             # For making HTTP requests (if needed)
 alembic           # For database migrations
 bcrypt
 python-jose[cryptography]
+redis

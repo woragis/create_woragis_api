@@ -11,6 +11,7 @@ services:
       - .:/code
     depends_on:
       - db
+      - redis
     environment:
       - DATABASE_URL=postgresql+psycopg://postgres:postgres@db:5432/postgres
 
@@ -26,6 +27,11 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - '5432:5432'
+
+  redis:
+    image: redis:alpine
+    ports:
+      - '6379:6379'
 
   pgadmin:
     image: dpage/pgadmin4
