@@ -9,3 +9,4 @@ alembic           # For database migrations
 bcrypt
 python-jose[cryptography]
 redis
+langchain
