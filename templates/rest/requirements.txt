@@ -3,3 +3,8 @@ uvicorn
 psycopg[binary]
 pydantic
 sqlalchemy
+python-dotenv     # For .env config support
+httpx             # For making HTTP requests (if needed)
+alembic           # For database migrations
+bcrypt
+python-jose[cryptography]
