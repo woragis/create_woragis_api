@@ -10,3 +10,4 @@ bcrypt
 python-jose[cryptography]
 redis
 langchain
+confluent-kafka
