@@ -1,6 +1,6 @@
-from ai.llms import OpenAI
-from ai.agents import initialize_agent, Tool
-from ai.agents import AgentExecutor
+from app.ai.llms import OpenAI
+from app.ai.agents import initialize_agent, Tool
+from app.ai.agents import AgentExecutor
 
 
 class LangChainModels:

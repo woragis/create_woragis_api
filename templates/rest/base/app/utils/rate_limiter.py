@@ -1,6 +1,8 @@
-from fastapi import Request, HTTPException
-from utils.redis_client import r
 from typing import Callable
+
+from fastapi import Request, HTTPException
+
+from app.utils.redis_client import r
 
 
 def get_rate_limiter(rate_limit: int, time_window: int) -> Callable:

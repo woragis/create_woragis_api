@@ -2,8 +2,9 @@ import uuid
 from datetime import datetime, timedelta
 
 from sqlalchemy.orm import Session
-from models.user import UserModel
-from utils.email import send_email
+
+from app.models.user import UserModel
+from app.utils.email import send_email
 
 RESET_TOKEN_EXPIRY_MINUTES = 15
 

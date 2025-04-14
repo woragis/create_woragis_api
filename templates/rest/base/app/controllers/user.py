@@ -1,8 +1,9 @@
 import uuid
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from models.user import UserModel
-from schemas.user import RegisterUser, UpdateUser, LoginUser
+
+from app.models.user import UserModel
+from app.schemas.user import RegisterUser, UpdateUser, LoginUser
 
 from utils.encryption import hash_password, verify_password
 from utils.jwt import create_access_token

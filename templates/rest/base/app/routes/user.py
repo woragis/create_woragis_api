@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, Request, HTTPException
 from sqlalchemy.orm import Session
-from data.database import SessionLocal
-from schemas.user import RegisterUser, LoginUser, User, UpdateUser
-from controllers import user as user_controller
-from utils.rate_limiter import get_rate_limiter
-from dependencies.auth import auth_user_id
+
+from app.data.database import SessionLocal
+from app.schemas.user import RegisterUser, LoginUser, User, UpdateUser
+from app.controllers import user as user_controller
+from app.utils.rate_limiter import get_rate_limiter
+from app.dependencies.auth import auth_user_id
 
 router = APIRouter(prefix="/users", tags=["Users"])
 

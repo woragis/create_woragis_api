@@ -1,7 +1,8 @@
 from langchain.agents import initialize_agent
 from langchain.tools import DuckDuckGoSearchResults
-from .models import LangChainModels
-from tools import SearchTool, ChatTool
+
+from app.ai.models import LangChainModels
+from app.ai.tools import SearchTool, ChatTool
 
 
 class LangChainAgent:

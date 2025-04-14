@@ -1,6 +1,7 @@
 from fastapi import HTTPException, Request
 from jose import JWTError, jwt
-from config.index import settings
+
+from app.core.config import settings
 
 
 def auth_user_id(request: Request):

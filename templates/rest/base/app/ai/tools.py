@@ -2,7 +2,8 @@ from langchain.agents import Tool
 from langchain.tools import DuckDuckGoSearchResults
 from langchain.agents import AgentExecutor
 from langchain.chains import ConversationChain
-from ai.models import LangChainModels
+
+from app.ai.models import LangChainModels
 
 
 class SearchTool(Tool):
