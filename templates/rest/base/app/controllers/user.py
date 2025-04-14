@@ -4,9 +4,8 @@ from sqlalchemy.orm import Session
 
 from app.models.user import UserModel
 from app.schemas.user import RegisterUser, UpdateUser, LoginUser
-
-from utils.encryption import hash_password, verify_password
-from utils.jwt import create_access_token
+from app.utils.encryption import hash_password, verify_password
+from app.utils.jwt import create_access_token
 
 
 def create_user(db: Session, user_data: RegisterUser):

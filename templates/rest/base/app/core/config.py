@@ -1,17 +1,18 @@
 import os
 
 from dotenv import load_dotenv
-from pydantic import BaseSettings
 
 # Load .env file
 load_dotenv()
 
 
-class Settings(BaseSettings):
+class Settings():
     PROJECT_NAME: str = "Woragis API"
     API_VERSION: str = "v1"
 
     # Database
+    DATABASE_URL: str = os.getenv(
+        'DATABASE_URL', 'postgresql+psycopg://postgres:postgres@db:5432/postgres')
     POSTGRES_USER: str = os.getenv("POSTGRES_USER", "postgres")
     POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "postgres")
     POSTGRES_DB: str = os.getenv("POSTGRES_DB", "postgres")
