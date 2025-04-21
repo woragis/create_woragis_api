@@ -2,11 +2,9 @@ services:
   web:
     build: .
     container_name: fastapi_app
-    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
-    ports:
-      - '8000:8000'
+    command: python main.py
     volumes:
-      - .:/code
+      - .:/worker
     depends_on:
       - db
       - redis

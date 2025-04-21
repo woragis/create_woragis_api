@@ -1,68 +1,90 @@
 # main.py
 
+from confluent_kafka import Consumer, Producer
+import json
+import time
+import signal
+import sys
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-import argparse
-from pathlib import Path
 
-# Your own modules (to be created in your project)
-# from src.data_loader import load_data
-# from src.analysis import run_analysis
-# from src.visualization import generate_plots
-# from src.modeling import train_model
+KAFKA_BROKER = "kafka:9092"
+TOPIC_IN = "raw-data"
+TOPIC_OUT = "processed-data"
+GROUP_ID = "data-science-group"
 
-DATA_PATH = Path("data/your_dataset.csv")
+# Graceful shutdown
+running = True
 
 
-def load_data(path: Path) -> pd.DataFrame:
-    print(f"Loading data from: {path}")
-    return pd.read_csv(path)
+def handle_sigint(sig, frame):
+    global running
+    print("🛑 Gracefully shutting down...")
+    running = False
 
 
-def explore_data(df: pd.DataFrame):
-    print("Dataset Head:")
-    print(df.head())
+signal.signal(signal.SIGINT, handle_sigint)
 
-    print("\nBasic Info:")
-    print(df.info())
+# Kafka setup
+consumer = Consumer({
+    "bootstrap.servers": KAFKA_BROKER,
+    "group.id": GROUP_ID,
+    "auto.offset.reset": "earliest"
+})
 
-    print("\nSummary Statistics:")
-    print(df.describe())
+producer = Producer({"bootstrap.servers": KAFKA_BROKER})
 
-
-def visualize_data(df: pd.DataFrame):
-    print("Generating plots...")
-
-    sns.set(style="whitegrid")
-    for column in df.select_dtypes(include=np.number).columns:
-        plt.figure(figsize=(8, 4))
-        sns.histplot(df[column].dropna(), kde=True)
-        plt.title(f"Distribution of {column}")
-        plt.tight_layout()
-        plt.savefig(f"outputs/plots/{column}_hist.png")
-        plt.close()
+# Processing function
 
 
-def main(args):
-    df = load_data(DATA_PATH)
-    explore_data(df)
+def process_data(data: dict) -> dict:
+    df = pd.DataFrame([data])
+    df["result"] = df["value"] * 10  # 🔁 Example transformation
+    return df.iloc[0].to_dict()
 
-    if args.visualize:
-        visualize_data(df)
+# Delivery report
 
-    # Example model training call:
-    # if args.train:
-    #     model = train_model(df)
-    #     model.save("outputs/model.pkl")
+
+def delivery_report(err, msg):
+    if err is not None:
+        print(f"❌ Delivery failed: {err}")
+    else:
+        print(f"✅ Sent to {msg.topic()} [{msg.partition()}]")
+
+# Start consuming
+
+
+def main():
+    consumer.subscribe([TOPIC_IN])
+    print(f"📡 Listening on topic '{TOPIC_IN}'...")
+
+    while running:
+        msg = consumer.poll(timeout=1.0)
+        if msg is None:
+            continue
+        if msg.error():
+            print(f"⚠️ Consumer error: {msg.error()}")
+            continue
+
+        try:
+            data = json.loads(msg.value().decode("utf-8"))
+            print(f"📥 Received: {data}")
+
+            processed = process_data(data)
+            print(f"🧠 Processed: {processed}")
+
+            producer.produce(
+                topic=TOPIC_OUT,
+                value=json.dumps(processed),
+                key=str(processed.get("id", "default")),
+                callback=delivery_report
+            )
+            producer.flush()
+
+        except Exception as e:
+            print(f"🔥 Error processing message: {e}")
+
+    consumer.close()
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Run data science project")
-    parser.add_argument("--visualize", action="store_true",
-                        help="Generate data visualizations")
-    # parser.add_argument("--train", action="store_true", help="Train model")
-    args = parser.parse_args()
-
-    main(args)
+    main()
