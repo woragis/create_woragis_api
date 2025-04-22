@@ -2,4 +2,4 @@ pandas
 numpy
 matplotlib
 seaborn
-confluent_kafka
+confluent-kafka
