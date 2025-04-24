@@ -1,1 +1,5 @@
-sqlalchemy
+click
+twine
+setuptools
+wheel
+
