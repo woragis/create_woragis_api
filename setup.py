@@ -6,10 +6,11 @@ setup(
     author="Woragis",
     author_email="masteringthecode.woragis@gmail.com",
     description="Create FastAPI backends with templates: REST, gRPC, AI",
-    packages=find_packages(),
+    packages=find_packages(
+        include=["create_woragis_api", "create_woragis_api.*"]),
     include_package_data=True,
     install_requires=[
-        "click",  # For CLI functionality
+        "click",  # Example: for CLI
     ],
     extras_require={
         "rest": ["fastapi", "uvicorn"],
@@ -26,13 +27,6 @@ setup(
     entry_points={
         "console_scripts": [
             "create-woragis-api=create_woragis_api.main:cli",
-        ],
-    },
-    # Include package data, like templates and extras
-    package_data={
-        "create_woragis_api": [
-            "templates/*",
-            "extras/*",
         ],
     },
 )
