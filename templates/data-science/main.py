@@ -1,5 +1,4 @@
 # main.py
-
 from confluent_kafka import Consumer, Producer
 import json
 import time
@@ -7,7 +6,7 @@ import signal
 import sys
 import pandas as pd
 
-KAFKA_BROKER = "kafka:9092"
+KAFKA_BROKER = "localhost:9092"
 TOPIC_IN = "raw-data"
 TOPIC_OUT = "processed-data"
 GROUP_ID = "data-science-group"
@@ -33,26 +32,23 @@ consumer = Consumer({
 
 producer = Producer({"bootstrap.servers": KAFKA_BROKER})
 
+
 # Processing function
-
-
 def process_data(data: dict) -> dict:
     df = pd.DataFrame([data])
     df["result"] = df["value"] * 10  # 🔁 Example transformation
     return df.iloc[0].to_dict()
 
+
 # Delivery report
-
-
 def delivery_report(err, msg):
     if err is not None:
         print(f"❌ Delivery failed: {err}")
     else:
         print(f"✅ Sent to {msg.topic()} [{msg.partition()}]")
 
+
 # Start consuming
-
-
 def main():
     consumer.subscribe([TOPIC_IN])
     print(f"📡 Listening on topic '{TOPIC_IN}'...")
